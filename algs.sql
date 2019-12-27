@@ -39,3 +39,24 @@ SELECT * FROM OrderDetails WHERE Product LIKE '[^sfad]';
 
 -- Get all records in Customers whose last name starts with a letter between M and Z
 SELECT * FROM Customers WHERE LastName LIKE '[m-z]';
+
+
+-- SQL IN
+
+-- Get all records from Employees that live in either Canada or Mexico
+SELECT * FROM Employees WHERE Country IN ('Canada', 'Mexico');
+
+-- Get all records where customers are from the same country as suppliers
+SELECT * FROM Customers WHERE Country IN (SELECT Country FROM Suppliers);
+
+
+-- SQL Between
+
+-- Get all records from Products where price is between 1000 and 2000
+SELECT * FROM Products WHERE Price BETWEEN 1000 AND 2000;
+
+-- Get all records in Customers where city is between "Albany" and "Detroit" ordered by firstname
+SELECT * FROM Customers WHERE City BETWEEN "Albany" AND "Detroit" ORDER BY FirstName;
+
+-- Get all records where product is not between 'coke' and 'pepsi' ordered by price
+SELECT * FROM Products WHERE ProductName NOT BETWEEN 'Pepsi' AND 'Coke' ORDER BY Price;
