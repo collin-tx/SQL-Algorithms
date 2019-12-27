@@ -1,3 +1,5 @@
+-- SQL functions
+
 -- Get average 'Price' from column 'OrderDetails' in DB
 SELECT AVG(Price) FROM OrderDetails;
 
@@ -15,3 +17,13 @@ SELECT * FROM Customers WHERE FirstName LIKE 'q%';
 
 -- Get all employees who live in Poughkeepsie and make less than $100,000
 SELECT * FROM Employees WHERE City = Poughkeepsie AND Salary < 100000;
+
+
+-- SQL Like
+
+-- Get all records from Customers in which their last name starts with "B" and ends with "N"
+SELECT * FROM Customers WHERE lastName LIKE 'b%n';
+
+-- Get all records from Employees where City does not start with 'C' but ends in D
+SELECT * FROM Employees WHERE City NOT LIKE 'c%' and City LIKE '%d';
+
