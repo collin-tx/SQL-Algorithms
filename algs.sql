@@ -12,6 +12,12 @@ SELECT SUM(Price) FROM OrderDetails;
 -- Get number of orders with a price over $1,000
 SELECT COUNT(OrderId) FROM  OrderDetails WHERE Price > 1000;
 
+SELECT movie_lang, MIN(movie_length), MAX(movie_length), AVG(movie_length), COUNT(*) FROM movies
+GROUP BY movie_lang;
+
+SELECT COUNT(*) FROM actors 
+WHERE date_of_birth > '1970-01-01';
+
 
 -- Get all employees who live in Poughkeepsie and make less than $100,000
 SELECT * FROM Employees WHERE City = Poughkeepsie AND Salary < 100000;
