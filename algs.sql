@@ -66,3 +66,21 @@ SELECT * FROM Customers WHERE City BETWEEN "Albany" AND "Detroit" ORDER BY First
 
 -- Get all records where product is not between 'coke' and 'pepsi' ordered by price
 SELECT * FROM Products WHERE ProductName NOT BETWEEN 'Pepsi' AND 'Coke' ORDER BY Price;
+
+
+
+
+--GROUP BY and HAVING clauses
+
+-- directors per nationality
+SELECT nationality, COUNT(nationality) from directors
+GROUP BY nationality;
+
+--sum total movie length for each age certificate/movie lang combo
+SELECT age_certificate, movie_lang, SUM(movie_length) from movies
+GROUP BY age_certificate, movie_lang;
+
+--movie langs with sum length of > 500
+SELECT movie_lang, SUM(movie_length) from movies
+GROUP BY movie_lang
+HAVING SUM(movie_length) > 500;
