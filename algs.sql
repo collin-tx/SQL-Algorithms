@@ -73,15 +73,15 @@ SELECT * FROM Products WHERE ProductName NOT BETWEEN 'Pepsi' AND 'Coke' ORDER BY
 --GROUP BY and HAVING clauses
 
 -- directors per nationality
-SELECT nationality, COUNT(nationality) from directors
+SELECT nationality, COUNT(nationality) FROM directors
 GROUP BY nationality;
 
 --sum total movie length for each age certificate/movie lang combo
-SELECT age_certificate, movie_lang, SUM(movie_length) from movies
+SELECT age_certificate, movie_lang, SUM(movie_length) FROM movies
 GROUP BY age_certificate, movie_lang;
 
 --movie langs with sum length of > 500
-SELECT movie_lang, SUM(movie_length) from movies
+SELECT movie_lang, SUM(movie_length) FROM movies
 GROUP BY movie_lang
 HAVING SUM(movie_length) > 500;
 
@@ -105,5 +105,61 @@ ORDER BY m.movie_name;
 SELECT m.movie_name, mr.domestic_takings, mr.international_takings
 FROM movies m
 JOIN movie_revenues mr ON m.movie_id = mr.movie_id
-WHERE mr.domestic_takings IS null OR mr.international_takings IS NULL
+WHERE mr.domestic_takings IS null 
+OR mr.international_takings IS NULL
 ORDER BY m.movie_name;
+
+-- OTHER JOINS
+
+-- Use a left join to select the first and last names of all british directors and the names and age certificates of the movies they directed.
+SELECT d.first_name, d.last_name, m.movie_name, m.age_certificate
+FROM directors d
+LEFT JOIN movies m ON d.director_id = m.director_id
+WHERE d.nationality = 'British'
+ORDER BY d.last_name;
+
+
+-- Count the number of movies that each director has directed.
+SELECT CONCAT(d.first_name, ' ',d.last_name) as name, COUNT(m.movie_name)
+FROM directors d
+FULL JOIN movies m ON d.director_id = m.director_id
+GROUP BY d.last_name, d.first_name
+ORDER BY d.last_name;
+
+-- Multiple Joins
+
+-- select actors full name and movie names of movies in English
+SELECT a.first_name, a.last_name, m.movie_name FROM actors a
+JOIN movies_actors ma ON a.actor_id = ma.actor_id
+JOIN movies m ON m.movie_id = ma.movie_id
+WHERE m.movie_lang = 'English'
+ORDER BY m.movie_name;
+
+-- combine all 5 tables
+SELECT d.first_name, d.last_name, m.movie_name, a.first_name, a.last_name, mr.domestic_takings, mr.international_takings
+FROM directors d
+JOIN movies m ON d.director_id = m.director_id
+JOIN movies_actors ma ON ma.movie_id = m.movie_id
+JOIN actors a ON a.actor_id = ma.actor_id
+JOIN movie_revenues mr ON mr.movie_id = m.movie_id;
+
+-- SELECT the first & last names of all actors who have starred in Wes Anderson movies
+SELECT DISTINCT a.first_name, a.last_name
+FROM actors a
+JOIN movies_actors ma ON a.actor_id = ma.actor_id
+JOIN movies m ON m.movie_id = ma.movie_id
+JOIN directors d ON d.director_id = m.director_id
+WHERE d.first_name = 'Wes'
+AND d.last_name = 'Anderson'
+ORDER BY a.last_name;
+
+-- Find which director has the highest total domestic takings 
+
+SELECT CONCAT(d.first_name, ' ', d.last_name) as name, SUM(mr.domestic_takings) AS total_dom_takings
+FROM directors d
+JOIN movies m ON m.director_id = d.director_id
+JOIN movie_revenues mr ON m.movie_id = mr.movie_id
+WHERE mr.domestic_takings IS NOT NULL
+GROUP BY d.first_name, d.last_name
+ORDER BY total_dom_takings DESC
+LIMIT 1;
