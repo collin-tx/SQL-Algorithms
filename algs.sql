@@ -86,7 +86,7 @@ GROUP BY movie_lang
 HAVING SUM(movie_length) > 500;
 
 
--- JOINS
+-- INNER JOINS
 --select directors first and last names, the movie names and release dates for all Chinese, Korean and Japanese movies
 SELECT d.first_name, d.last_name, m.movie_name, m.release_date
 FROM directors d
