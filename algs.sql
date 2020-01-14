@@ -84,3 +84,26 @@ GROUP BY age_certificate, movie_lang;
 SELECT movie_lang, SUM(movie_length) from movies
 GROUP BY movie_lang
 HAVING SUM(movie_length) > 500;
+
+
+-- JOINS
+--select directors first and last names, the movie names and release dates for all Chinese, Korean and Japanese movies
+SELECT d.first_name, d.last_name, m.movie_name, m.release_date
+FROM directors d
+JOIN movies m ON m.director_id = d.director_id
+WHERE m.movie_lang IN ('Chinese', 'Korean', 'Japanese')
+ORDER BY m.movie_name;
+
+--SELECT movie names, release dates and international takings of all English language movies
+SELECT m.movie_name, m.release_date, mr.international_takings
+FROM movies m
+JOIN movie_revenues mr ON m.movie_id = mr.movie_id
+WHERE m.movie_lang = 'English'
+ORDER BY m.movie_name;
+
+-- select movie names, domestic takings and international takings for all movies with either missing domestic takings or missing international takings and order the results by movie name
+SELECT m.movie_name, mr.domestic_takings, mr.international_takings
+FROM movies m
+JOIN movie_revenues mr ON m.movie_id = mr.movie_id
+WHERE mr.domestic_takings IS null OR mr.international_takings IS NULL
+ORDER BY m.movie_name;
