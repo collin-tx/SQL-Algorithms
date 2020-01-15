@@ -136,7 +136,7 @@ WHERE m.movie_lang = 'English'
 ORDER BY m.movie_name;
 
 -- combine all 5 tables
-SELECT d.first_name, d.last_name, m.movie_name, a.first_name, a.last_name, mr.domestic_takings, mr.international_takings
+SELECT CONCAT(d.first_name, ' ', d.last_name) as director, m.movie_name, CONCAT(a.first_name, ' ', a.last_name) as actor, mr.domestic_takings, mr.international_takings
 FROM directors d
 JOIN movies m ON d.director_id = m.director_id
 JOIN movies_actors ma ON ma.movie_id = m.movie_id
@@ -154,7 +154,6 @@ AND d.last_name = 'Anderson'
 ORDER BY a.last_name;
 
 -- Find which director has the highest total domestic takings 
-
 SELECT CONCAT(d.first_name, ' ', d.last_name) as name, SUM(mr.domestic_takings) AS total_dom_takings
 FROM directors d
 JOIN movies m ON m.director_id = d.director_id
