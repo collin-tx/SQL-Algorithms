@@ -180,3 +180,18 @@ UNION ALL
 SELECT first_name, last_name from actors
 WHERE date_of_birth BETWEEN '1960-01-01' AND '1969-12-31'
 ORDER BY last_name;
+
+
+-- INTERSECT / EXCEPT
+--INTERSECT first, last name and DOB of directors and actors
+SELECT first_name, last_name, date_of_birth from directors
+INTERSECT
+SELECT first_name, last_name, date_of_birth from actors;
+
+-- Retrieve first names of male actors unless they have the same first name as any British directors
+SELECT first_name from actors
+WHERE gender = 'M'
+EXCEPT
+SELECT first_name from directors
+WHERE nationality = 'British'
+ORDER BY first_name;
