@@ -144,7 +144,7 @@ JOIN actors a ON a.actor_id = ma.actor_id
 JOIN movie_revenues mr ON mr.movie_id = m.movie_id;
 
 -- SELECT the first & last names of all actors who have starred in Wes Anderson movies
-SELECT DISTINCT a.first_name, a.last_name
+SELECT DISTINCT CONCAT(a.first_name, ' ', a.last_name) as actor
 FROM actors a
 JOIN movies_actors ma ON a.actor_id = ma.actor_id
 JOIN movies m ON m.movie_id = ma.movie_id
@@ -194,3 +194,21 @@ EXCEPT
 SELECT first_name from directors
 WHERE nationality = 'British'
 ORDER BY first_name;
+
+
+-- SUBQUERIES
+-- uncorrelated SQs
+-- Get all movies whose length are greater than the avg movie length
+SELECT movie_name, movie_length from movies
+where movie_length > 
+	(SELECT AVG(movie_length) from movies);
+	
+
+--correlated SQs
+-- Get all the oldest directors from each nationality
+SELECT CONCAT(d1.first_name, ' ', d1.last_name) as director, d1.date_of_birth, d1.nationality
+FROM directors d1
+WHERE date_of_birth = 
+	(SELECT MIN(date_of_birth) FROM directors d2
+	WHERE d2.nationality = d1.nationality)
+ORDER BY date_of_birth;
