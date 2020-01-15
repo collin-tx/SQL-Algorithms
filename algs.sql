@@ -260,4 +260,40 @@ WHERE date_of_birth =
 	WHERE d2.nationality = d1.nationality)
 ORDER BY date_of_birth;
 
+-- return movies with max length for each different language
+SELECT m1.movie_name, m1.movie_length, m1.movie_lang from movies m1
+WHERE m1.movie_length = 
+	(SELECT MAX(movie_length) from movies m2
+	WHERE m2.movie_lang = m1.movie_lang)
+ORDER BY m1.movie_lang;
 
+
+-- select first/last name and date of birth for the oldest male and female actors
+SELECT CONCAT(a1.first_name, ' ', a1.last_name) as actor, a1.date_of_birth, a1.gender
+FROM actors a1
+WHERE a1.date_of_birth =
+	(SELECT MIN(a2.date_of_birth) FROM actors a2
+	WHERE a2.gender = 'F')
+UNION
+SELECT CONCAT(a1.first_name, ' ', a1.last_name) as actor, a1.date_of_birth, a1.gender
+FROM actors a1
+WHERE a1.date_of_birth =
+	(SELECT MIN(a2.date_of_birth) FROM actors a2
+	WHERE a2.gender = 'M');
+	
+-- OR, simplified
+
+SELECT a1.first_name, a1.last_name, a1.date_of_birth from actors a1
+WHERE a1.date_of_birth = 
+	(SELECT MIN(a2.date_of_birth) FROM actors a2
+	WHERE a2.gender = a1.gender);
+
+
+-- select movie name, length and age certificate for movies with an above 
+--average length for their age certificate
+SELECT m1.movie_name, m1.movie_length, m1.age_certificate
+FROM movies m1
+WHERE movie_length >
+	(SELECT AVG(m2.movie_length) from movies m2
+	WHERE m2.age_certificate = m1.age_certificate)
+ORDER BY m1.age_certificate;
