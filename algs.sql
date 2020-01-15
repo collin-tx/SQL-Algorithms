@@ -163,3 +163,20 @@ WHERE mr.domestic_takings IS NOT NULL
 GROUP BY d.first_name, d.last_name
 ORDER BY total_dom_takings DESC
 LIMIT 1;
+
+
+-- UNIONS
+-- select first names, last names and DOBs from directors and actors, ordered by DOB
+SELECT first_name, last_name, date_of_birth from directors
+UNION
+SELECT first_name, last_name, date_of_birth from actors
+ORDER BY date_of_birth;
+
+
+-- select first & last names of all directors and actors born in the 1960s, ordered by last name
+SELECT first_name, last_name from directors
+WHERE date_of_birth BETWEEN '1960-01-01' AND '1969-12-31'
+UNION ALL
+SELECT first_name, last_name from actors
+WHERE date_of_birth BETWEEN '1960-01-01' AND '1969-12-31'
+ORDER BY last_name;
