@@ -199,9 +199,56 @@ ORDER BY first_name;
 -- SUBQUERIES
 -- uncorrelated SQs
 -- Get all movies whose length are greater than the avg movie length
-SELECT movie_name, movie_length from movies
-where movie_length > 
-	(SELECT AVG(movie_length) from movies);
+SELECT movie_name, movie_length FROM movies
+WHERE movie_length > 
+	(SELECT AVG(movie_length) FROM movies);
+
+  -- get all directors younger than James Cameron
+SELECT CONCAT(first_name, ' ', last_name) AS director, date_of_birth FROM directors
+WHERE date_of_birth >
+	(SELECT date_of_birth from directors
+	WHERE first_name = 'James'
+	AND last_name = 'Cameron')
+ORDER BY date_of_birth;
+
+-- Get titles and directors for movies that made more money internationally than domestically
+SELECT movie_name, CONCAT(d.first_name, '', d.last_name) as director FROM movies m
+JOIN directors d ON m.director_id = d.director_id
+WHERE m.movie_id IN
+	(SELECT movie_id from movie_revenues
+	WHERE international_takings > domestic_takings);
+
+--select all actors older than Marlon Brando
+SELECT CONCAT(first_name, ' ', last_name) as actor, date_of_birth from actors
+WHERE date_of_birth < 
+	(SELECT date_of_birth from actors
+	WHERE first_name = 'Marlon'
+	AND last_name = 'Brando')
+ORDER BY date_of_birth;
+
+-- select titles of all movies that have domestic takings > 300 million
+SELECT m.movie_name, mr.domestic_takings FROM movies m
+JOIN movie_revenues mr ON mr.movie_id = m.movie_id
+WHERE m.movie_id IN
+	(SELECT movie_id FROM movie_revenues
+	WHERE mr.domestic_takings > 300)
+ORDER BY mr.domestic_takings;
+
+-- return shortest and longest movie length for movies with above average domestic takings.
+SELECT MIN(m.movie_length), MAX(m.movie_length)
+FROM movies m
+JOIN movie_revenues mr ON m.movie_id = mr.movie_id
+WHERE mr.domestic_takings >
+	(SELECT AVG(domestic_takings) FROM movie_revenues);
+	
+--OR, you can get fancy with a double nested query
+
+SELECT MIN(movie_length), MAX(movie_length) FROM movies
+WHERE movie_id IN
+	(SELECT movie_id FROM movie_revenues
+	WHERE domestic_takings >
+		(SELECT AVG(domestic_takings) FROM movie_revenues));
+
 	
 
 --correlated SQs
@@ -212,3 +259,5 @@ WHERE date_of_birth =
 	(SELECT MIN(date_of_birth) FROM directors d2
 	WHERE d2.nationality = d1.nationality)
 ORDER BY date_of_birth;
+
+
